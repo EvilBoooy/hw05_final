@@ -7,7 +7,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 from http import HTTPStatus
 
-from posts.models import Group, Post, User
+from ..models import Group, Post, User
 
 
 class PostCreateFormTests(TestCase):
