@@ -115,7 +115,6 @@ class PostURLTests(TestCase):
         self.assertEqual(response.context['author'], self.user)
         self.assertIn('posts', response.context)
         self.assertIn('page_obj', response.context)
-        self.assertIn('posts_count', response.context)
         post_image = Post.objects.first().image
         self.assertTrue(post_image, 'posts/small.gif')
 

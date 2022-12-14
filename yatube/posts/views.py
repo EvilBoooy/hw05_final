@@ -8,7 +8,7 @@ from .utils import get_page_context
 
 
 def index(request):
-    post_list = Post.objects.all()
+    post_list = Post.objects.select_related('author')
     context = {
         'page_obj': get_page_context(post_list, request),
     }
@@ -29,12 +29,10 @@ def group_posts(request, slug):
 def profile(request, username):
     author = get_object_or_404(User, username=username)
     posts = Post.objects.filter(author=author)
-    posts_count = Post.objects.filter(author=author).count()
     context = {
         'author': author,
         'posts': posts,
         'page_obj': get_page_context(posts, request),
-        'posts_count': posts_count,
     }
     return render(request, 'posts/profile.html', context)
 
@@ -110,12 +108,9 @@ def follow_index(request):
 
 @login_required
 def profile_follow(request, username):
-    user = request.user
     author = get_object_or_404(User, username=username)
-    following = Follow.objects.filter(author=author, user=user)
-    if user != author and not following.exists():
-        follow = Follow.objects.create(user=user, author=author)
-        follow.save
+    if request.user != author:
+        Follow.objects.get_or_create(user=request.user, author=author)
     return redirect(reverse('posts:profile', args=[username]))
 
 
